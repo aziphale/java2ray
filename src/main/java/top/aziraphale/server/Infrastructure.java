@@ -1,10 +1,12 @@
 package top.aziraphale.server;
 
+import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,12 +23,24 @@ public class Infrastructure {
     }
 
     @Bean
+    public Bootstrap clientBootstrap() {
+        return new Bootstrap().group(clientGroup())
+                .channel(NioSocketChannel.class)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000);
+    }
+
+    @Bean
     public EventLoopGroup bossGroup() {
         return new NioEventLoopGroup();
     }
 
     @Bean
     public EventLoopGroup workerGroup() {
+        return new NioEventLoopGroup();
+    }
+
+    @Bean
+    public EventLoopGroup clientGroup() {
         return new NioEventLoopGroup();
     }
 

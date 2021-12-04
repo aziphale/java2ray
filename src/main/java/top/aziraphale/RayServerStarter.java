@@ -10,7 +10,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import top.aziraphale.infra.conf.ConfigWrapper;
 import top.aziraphale.server.NettyServer;
-import top.aziraphale.until.ConfigJsonParser;
+import top.aziraphale.util.ConfigJsonParser;
 
 import java.io.IOException;
 

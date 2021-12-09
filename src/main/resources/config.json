@@ -1,6 +1,7 @@
 // Config file of V2Ray. This file follows standard JSON format, with comments support.
 // Uncomment entries below to satisfy your needs. Also read our manual for more detail at
 // https://www.v2fly.org/
+// dev environment user id is b831381d-6324-4d53-ad4f-8cda48b30811
 {
   "log": {
     // By default, V2Ray writes access log to stdout.

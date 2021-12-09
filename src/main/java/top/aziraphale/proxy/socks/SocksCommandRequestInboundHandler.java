@@ -33,7 +33,7 @@ public class SocksCommandRequestInboundHandler extends SimpleChannelInboundHandl
 
     private void directConnect(ChannelHandlerContext ctx, DefaultSocks5CommandRequest msg, Socks5AddressType socks5AddressType) {
         log.info("request address is {} port is {}", msg.dstAddr(), msg.dstPort());
-        ChannelFuture future;
+        // ChannelFuture future;
         clientBootstrap.handler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
@@ -52,7 +52,7 @@ public class SocksCommandRequestInboundHandler extends SimpleChannelInboundHandl
                             ctx.pipeline().remove(SocksCommandRequestInboundHandler.class);
                             ctx.pipeline().remove(Socks5CommandRequestDecoder.class);
                         } else {
-                            log.error("target connect failed", msg.dstAddr(), msg.dstPort());
+                            log.error("target(address of {} port of {}) connect failed", msg.dstAddr(), msg.dstPort());
                             DefaultSocks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.FAILURE, socks5AddressType);
                             ctx.writeAndFlush(commandResponse);
                             future.channel().close();

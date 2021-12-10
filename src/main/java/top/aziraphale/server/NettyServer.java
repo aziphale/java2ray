@@ -8,8 +8,8 @@ import io.netty.handler.codec.socksx.v5.Socks5InitialRequestDecoder;
 import io.netty.handler.codec.socksx.v5.Socks5ServerEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import top.aziraphale.proxy.socks.SocksCommandRequestInboundHandler;
-import top.aziraphale.proxy.socks.SocksInitialRequestInboundHandler;
+import top.aziraphale.proxy.socks.in.SocksCommandRequestInboundHandler;
+import top.aziraphale.proxy.socks.in.SocksInitialRequestInboundHandler;
 
 @Component
 @Slf4j

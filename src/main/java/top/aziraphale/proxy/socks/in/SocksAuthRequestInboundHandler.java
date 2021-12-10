@@ -1,4 +1,4 @@
-package top.aziraphale.proxy.socks;
+package top.aziraphale.proxy.socks.in;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -15,5 +15,4 @@ public class SocksAuthRequestInboundHandler extends SimpleChannelInboundHandler<
         ctx.pipeline().remove(this);
         ctx.pipeline().remove(Socks5PasswordAuthRequestDecoder.class);
     }
-
 }

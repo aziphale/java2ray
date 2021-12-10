@@ -111,7 +111,7 @@
   // Policy controls some internal behavior of how V2Ray handles connections.
   // It may be on connection level by user levels in 'levels', or global settings in 'system.'
   "policy": {
-    // Connection policys by user levels
+    // Connection policy by user levels
     "levels": {
       "0": {
         "uplinkOnly": 0,
@@ -126,7 +126,7 @@
     }
   },
 
-  // Stats enables internal stats counter.
+  // Stats enable internal stats counter.
   // This setting can be used together with Policy and Api. 
   //"stats":{},
 

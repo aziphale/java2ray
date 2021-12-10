@@ -1,10 +1,14 @@
 package top.aziraphale.encrypt;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HMAC {
 
     private static final String MAC_NAME = "HmacMD5";

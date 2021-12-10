@@ -1,9 +1,13 @@
 package top.aziraphale.encrypt;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHAKEDigest;
 
-public class SHA3 {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class SHA {
 
     /**
      * SHA3-Shake128
@@ -16,5 +20,13 @@ public class SHA3 {
         byte[] date = new byte[digest.getDigestSize()];
         digest.doFinal(date, 0);
         return date;
+    }
+
+    /**
+     * @param origin data
+     * @return the SHA256 checksum of the data
+     */
+    public static byte[] sha256(byte[] origin) {
+        return DigestUtils.sha256(origin);
     }
 }

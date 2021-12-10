@@ -1,5 +1,5 @@
-# jdk2ray
+# JDK2RAY
 
-The Java implement of [v2ray-core](https://github.com/v2fly/v2ray-core)
+the Java implement of [v2ray-core](https://github.com/v2fly/v2ray-core)
 
 only for study

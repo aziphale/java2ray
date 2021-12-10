@@ -1,4 +1,4 @@
-package top.aziraphale.proxy.http;
+package top.aziraphale.proxy.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -12,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
-public class OutboundHttpRequest extends ChannelInboundHandlerAdapter {
+public class OutboundRequest extends ChannelInboundHandlerAdapter {
 
     private final ChannelFuture dstChannelFuture;
 
-    public OutboundHttpRequest(ChannelFuture dstChannelFuture) {
+    public OutboundRequest(ChannelFuture dstChannelFuture) {
         this.dstChannelFuture = dstChannelFuture;
     }
 

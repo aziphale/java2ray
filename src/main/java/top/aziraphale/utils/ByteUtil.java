@@ -1,5 +1,9 @@
-package top.aziraphale.util;
+package top.aziraphale.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ByteUtil {
 
     public static final int BIT_MASK_ALL_ONE = 0xFF;

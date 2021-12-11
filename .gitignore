@@ -3,6 +3,7 @@
 target/
 
 # Log file
+logs
 *.log
 
 # BlueJ files
@@ -26,3 +27,5 @@ hs_err_pid*
 # IDEA configuration
 *.iml
 .idea/
+
+.DS_Store

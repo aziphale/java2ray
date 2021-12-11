@@ -8,6 +8,8 @@ import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 import top.aziraphale.proxy.common.OutboundRequest;
 import top.aziraphale.proxy.common.OutboundResponse;
+import top.aziraphale.proxy.vmess.out.OutboundVMessRequest;
+import top.aziraphale.proxy.vmess.out.OutboundVMessResponse;
 
 @Slf4j
 public class SocksCommandRequestInboundHandler extends SimpleChannelInboundHandler<DefaultSocks5CommandRequest> {
@@ -67,7 +69,7 @@ public class SocksCommandRequestInboundHandler extends SimpleChannelInboundHandl
         clientBootstrap.handler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(new OutboundResponse(ctx));
+                ch.pipeline().addLast(new OutboundVMessResponse(ctx));
             }
         });
         clientBootstrap.connect(msg.dstAddr(), msg.dstPort())
@@ -76,7 +78,7 @@ public class SocksCommandRequestInboundHandler extends SimpleChannelInboundHandl
                     public void operationComplete(ChannelFuture future) throws Exception {
                         if (future.isSuccess()) {
                             log.debug("target(address of {} port of {}) connected", msg.dstAddr(), msg.dstPort());
-                            ctx.pipeline().addLast(new OutboundRequest(future));
+                            ctx.pipeline().addLast(new OutboundVMessRequest(future));
                             DefaultSocks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.SUCCESS, socks5AddressType);
                             ctx.writeAndFlush(commandResponse);
                             ctx.pipeline().remove(SocksCommandRequestInboundHandler.class);

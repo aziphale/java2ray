@@ -6,6 +6,8 @@ public interface RayOutHandler {
 
     Target pick();
 
+    Target pick(String tag);
+
     List<Target> handlerList();
 
 }

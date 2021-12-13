@@ -3,14 +3,21 @@ package top.aziraphale.server;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
-import io.netty.handler.codec.socksx.v5.Socks5CommandRequestDecoder;
-import io.netty.handler.codec.socksx.v5.Socks5InitialRequestDecoder;
-import io.netty.handler.codec.socksx.v5.Socks5ServerEncoder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
-import top.aziraphale.proxy.socks.in.SocksCommandRequestInboundHandler;
-import top.aziraphale.proxy.socks.in.SocksInitialRequestInboundHandler;
+import top.aziraphale.RayServerStarter;
+import top.aziraphale.exception.NoneInboundException;
+import top.aziraphale.infra.conf.InboundDetourConfig;
 
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * core server start here
+ * @author sheffery
+ * @date 2021-12-13 7:45 PM
+ */
 @Component
 @Slf4j
 public class NettyServer {
@@ -29,25 +36,25 @@ public class NettyServer {
 
     public void run() throws Exception {
         try {
-            serverBootstrap.childHandler(new ChannelInitializer<>() {
-                @Override
-                protected void initChannel(Channel channel) {
-                    ChannelPipeline pipeline = channel.pipeline();
-                    pipeline.addLast(Socks5ServerEncoder.DEFAULT);
-                    pipeline.addLast(new Socks5InitialRequestDecoder());
-                    pipeline.addLast(new SocksInitialRequestInboundHandler());
-//                    pipeline.addLast(new Socks5PasswordAuthRequestDecoder());
-//                    pipeline.addLast(new SocksAuthRequestInboundHandler());
-                    pipeline.addLast(new Socks5CommandRequestDecoder());
-                    pipeline.addLast(new SocksCommandRequestInboundHandler(clientBootstrap));
-                }
-            });
+            serverBootstrap.childHandler(new ChannelBase(this.clientBootstrap));
 
-            log.info("bind port {}", 8080);
-            ChannelFuture future = serverBootstrap.bind(8080).sync();
-            log.info("bind port successfully, wait for connection coming");
+            List<InboundDetourConfig> inbounds = RayServerStarter.getConfig().getInbounds();
 
-            future.channel().closeFuture().sync();
+            if (CollectionUtils.isEmpty(inbounds)) {
+                throw new NoneInboundException();
+            }
+
+            List<ChannelFuture> futures = new ArrayList<>();
+            for (InboundDetourConfig inbound : inbounds) {
+                log.info("bind port {}", inbound.getPort());
+                ChannelFuture future = serverBootstrap.bind(inbound.getPort()).sync();
+                futures.add(future);
+                log.info("bind port successfully, {} wait for connection coming", inbound.getProtocol());
+            }
+
+            for (ChannelFuture future : futures) {
+                future.channel().closeFuture().sync();
+            }
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

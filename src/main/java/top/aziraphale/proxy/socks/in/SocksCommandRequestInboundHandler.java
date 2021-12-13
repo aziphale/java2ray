@@ -4,7 +4,6 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.socksx.v5.*;
-import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 import top.aziraphale.proxy.common.OutboundRequest;
 import top.aziraphale.proxy.common.OutboundResponse;
@@ -23,14 +22,14 @@ public class SocksCommandRequestInboundHandler extends SimpleChannelInboundHandl
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DefaultSocks5CommandRequest msg) throws Exception {
         Socks5AddressType socks5AddressType = msg.dstAddrType();
-        if (!Socks5CommandType.CONNECT.equals(msg.type())) {
-            log.debug("command type is {}", msg.type());
-            ReferenceCountUtil.retain(msg);
-            ctx.fireChannelRead(msg);
-            return;
+        log.debug("socks command type is {}", msg.type());
+        // TODO just handle connect command in this version
+        if (Socks5CommandType.CONNECT.equals(msg.type())) {
+            log.debug("target address is {} port is {}", msg.dstAddr(), msg.dstPort());
+            directConnect(ctx, msg, socks5AddressType);
+        } else {
+            ctx.close();
         }
-        log.debug("target address is {} port is {}", msg.dstAddr(), msg.dstPort());
-        directConnect(ctx, msg, socks5AddressType);
     }
 
     private void directConnect(ChannelHandlerContext ctx, DefaultSocks5CommandRequest msg, Socks5AddressType socks5AddressType) {
@@ -43,22 +42,19 @@ public class SocksCommandRequestInboundHandler extends SimpleChannelInboundHandl
             }
         });
         clientBootstrap.connect(msg.dstAddr(), msg.dstPort())
-                .addListener(new ChannelFutureListener() {
-                    @Override
-                    public void operationComplete(ChannelFuture future) throws Exception {
-                        if (future.isSuccess()) {
-                            log.debug("target(address of {} port of {}) connected", msg.dstAddr(), msg.dstPort());
-                            ctx.pipeline().addLast(new OutboundRequest(future));
-                            DefaultSocks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.SUCCESS, socks5AddressType);
-                            ctx.writeAndFlush(commandResponse);
-                            ctx.pipeline().remove(SocksCommandRequestInboundHandler.class);
-                            ctx.pipeline().remove(Socks5CommandRequestDecoder.class);
-                        } else {
-                            log.error("target(address of {} port of {}) connect failed", msg.dstAddr(), msg.dstPort());
-                            DefaultSocks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.FAILURE, socks5AddressType);
-                            ctx.writeAndFlush(commandResponse);
-                            future.channel().close();
-                        }
+                .addListener((ChannelFutureListener) future -> {
+                    if (future.isSuccess()) {
+                        log.debug("target(address of {} port of {}) connected", msg.dstAddr(), msg.dstPort());
+                        ctx.pipeline().addLast(new OutboundRequest(future));
+                        DefaultSocks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.SUCCESS, socks5AddressType);
+                        ctx.writeAndFlush(commandResponse);
+                        ctx.pipeline().remove(SocksCommandRequestInboundHandler.class);
+                        ctx.pipeline().remove(Socks5CommandRequestDecoder.class);
+                    } else {
+                        log.error("target(address of {} port of {}) connect failed", msg.dstAddr(), msg.dstPort());
+                        DefaultSocks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.FAILURE, socks5AddressType);
+                        ctx.writeAndFlush(commandResponse);
+                        future.channel().close();
                     }
                 });
     }
@@ -73,22 +69,19 @@ public class SocksCommandRequestInboundHandler extends SimpleChannelInboundHandl
             }
         });
         clientBootstrap.connect(msg.dstAddr(), msg.dstPort())
-                .addListener(new ChannelFutureListener() {
-                    @Override
-                    public void operationComplete(ChannelFuture future) throws Exception {
-                        if (future.isSuccess()) {
-                            log.debug("target(address of {} port of {}) connected", msg.dstAddr(), msg.dstPort());
-                            ctx.pipeline().addLast(new OutboundVMessRequest(future));
-                            DefaultSocks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.SUCCESS, socks5AddressType);
-                            ctx.writeAndFlush(commandResponse);
-                            ctx.pipeline().remove(SocksCommandRequestInboundHandler.class);
-                            ctx.pipeline().remove(Socks5CommandRequestDecoder.class);
-                        } else {
-                            log.error("target(address of {} port of {}) connect failed", msg.dstAddr(), msg.dstPort());
-                            DefaultSocks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.FAILURE, socks5AddressType);
-                            ctx.writeAndFlush(commandResponse);
-                            future.channel().close();
-                        }
+                .addListener((ChannelFutureListener) future -> {
+                    if (future.isSuccess()) {
+                        log.debug("target(address of {} port of {}) connected", msg.dstAddr(), msg.dstPort());
+                        ctx.pipeline().addLast(new OutboundVMessRequest(future));
+                        DefaultSocks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.SUCCESS, socks5AddressType);
+                        ctx.writeAndFlush(commandResponse);
+                        ctx.pipeline().remove(SocksCommandRequestInboundHandler.class);
+                        ctx.pipeline().remove(Socks5CommandRequestDecoder.class);
+                    } else {
+                        log.error("target(address of {} port of {}) connect failed", msg.dstAddr(), msg.dstPort());
+                        DefaultSocks5CommandResponse commandResponse = new DefaultSocks5CommandResponse(Socks5CommandStatus.FAILURE, socks5AddressType);
+                        ctx.writeAndFlush(commandResponse);
+                        future.channel().close();
                     }
                 });
     }

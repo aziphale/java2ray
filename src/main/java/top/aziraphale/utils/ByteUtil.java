@@ -3,6 +3,13 @@ package top.aziraphale.utils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Sheffery
+ * @date 2021/12/19 3:19 PM
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ByteUtil {
 
@@ -51,17 +58,64 @@ public class ByteUtil {
         if (arr == null || arr.length == 0) {
             System.out.println("null");
         } else {
-            for (byte sub : arr) {
+            int posLength = Integer.toString(arr.length - 1).length();
+            for (int i = 0; i < arr.length; i++) {
+                byte sub = arr[i];
+                System.out.printf("[%" + posLength + "d]", i + 1);
                 for (int offset = 7; offset >= 0; offset--) {
                     System.out.print((sub >> offset) & 1);
                 }
                 System.out.print(" ");
+                if ((i + 1) % 8 == 0) {
+                    System.out.println();
+                }
             }
             System.out.println();
+            System.out.println();
+            List<String> list = new ArrayList<>();
+            for (byte sub : arr) {
+                list.add("(byte) " + String.valueOf(sub));
+            }
+            System.out.print("byte[] array = new byte[]{" + String.join(", ", list) + "};");
         }
     }
 
-    public static int convertHex(char one) {
+    /**
+     * combine byte arrays together
+     */
+    public static byte[] concat(byte[] prev, byte[] next) {
+        int split = (prev == null ? 0 : prev.length);
+        int totalLength = split + (next == null ? 0 : next.length);
+        byte[] array = new byte[totalLength];
+        if (prev != null) {
+            System.arraycopy(prev, 0, array, 0, prev.length);
+        }
+        if (next != null) {
+            System.arraycopy(next, 0, array, split, next.length);
+        }
+        return array;
+    }
+
+    /**
+     * return last bytes in byte array
+     * @param src
+     * @param length
+     * @return
+     */
+    public static byte[] tail(byte[] src, int length) {
+        if (src == null) {
+            return new byte[length];
+        }
+        byte[] array = new byte[length];
+        if (src.length <= length) {
+            System.arraycopy(src, 0, array, length - src.length, src.length);
+        } else {
+            System.arraycopy(src, src.length - length, array, 0, length);
+        }
+        return array;
+    }
+
+    private static int convertHex(char one) {
         switch (one) {
             case '0': return 0;
             case '1': return 1;

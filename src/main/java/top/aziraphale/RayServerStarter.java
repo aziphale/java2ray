@@ -2,6 +2,7 @@ package top.aziraphale;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -17,7 +18,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @ComponentScan
-public class RayServerStarter {
+public class RayServerStarter implements DisposableBean {
 
     /**
      * deserialized config
@@ -25,14 +26,8 @@ public class RayServerStarter {
     @Getter
     private static ConfigWrapper config;
 
-    /**
-     * Netty Bootstrap
-     */
-    private final NettyServer nettyServer;
-
-    public RayServerStarter(NettyServer nettyServer) {
-        this.nettyServer = nettyServer;
-    }
+    // run status
+    private static boolean running = true;
 
     public static void main(String[] args) {
 
@@ -57,5 +52,23 @@ public class RayServerStarter {
             log.error("core server start failed", exception);
         }
 
+        context.registerShutdownHook();
+        synchronized (RayServerStarter.class) {
+            while (running) {
+                try {
+                    RayServerStarter.class.wait();
+                } catch (InterruptedException interruptedException) {
+                    log.error("netty thread error", interruptedException);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void destroy() {
+        synchronized (RayServerStarter.class) {
+            running = false;
+            RayServerStarter.class.notify();
+        }
     }
 }

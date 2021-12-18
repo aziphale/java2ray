@@ -7,4 +7,10 @@ package top.aziraphale.exception;
  */
 public class RayBaseException extends Exception {
 
+    public RayBaseException() {
+    }
+
+    public RayBaseException(String message) {
+        super(message);
+    }
 }

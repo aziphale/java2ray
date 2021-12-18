@@ -21,7 +21,6 @@ public class VMessRequest {
 
     public static final byte REQUEST_OPTION_AUTHENTICATED_LENGTH = 0x10;
 
-    private byte version = VMESS_VERSION;
     private byte[] requestBodyIV = new byte[16];
     private byte[] requestBodyKey = new byte[16];
     private byte responseHeader = RandomUtil.nextByte();

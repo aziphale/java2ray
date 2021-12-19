@@ -54,32 +54,6 @@ public class ByteUtil {
         return bytes;
     }
 
-    public static void printByteArr(byte... arr) {
-        if (arr == null || arr.length == 0) {
-            System.out.println("null");
-        } else {
-            int posLength = Integer.toString(arr.length - 1).length();
-            for (int i = 0; i < arr.length; i++) {
-                byte sub = arr[i];
-                System.out.printf("[%" + posLength + "d]", i + 1);
-                for (int offset = 7; offset >= 0; offset--) {
-                    System.out.print((sub >> offset) & 1);
-                }
-                System.out.print(" ");
-                if ((i + 1) % 8 == 0) {
-                    System.out.println();
-                }
-            }
-            System.out.println();
-            System.out.println();
-            List<String> list = new ArrayList<>();
-            for (byte sub : arr) {
-                list.add("(byte) " + String.valueOf(sub));
-            }
-            System.out.print("byte[] array = new byte[]{" + String.join(", ", list) + "};");
-        }
-    }
-
     /**
      * combine byte arrays together
      */
@@ -113,6 +87,38 @@ public class ByteUtil {
             System.arraycopy(src, src.length - length, array, 0, length);
         }
         return array;
+    }
+
+    /**
+     * print every bit in byte array
+     * only for develop
+     * @param array
+     */
+    public static void printByteArr(byte... array) {
+        if (array == null || array.length == 0) {
+            System.out.println("null");
+        } else {
+            int posLength = Integer.toString(array.length - 1).length();
+            for (int i = 0; i < array.length; i++) {
+                byte sub = array[i];
+                System.out.printf("[%" + posLength + "d]", i + 1);
+                for (int offset = 7; offset >= 0; offset--) {
+                    System.out.print((sub >> offset) & 1);
+                }
+                System.out.print(" ");
+                if ((i + 1) % 8 == 0) {
+                    System.out.println();
+                }
+            }
+            System.out.println();
+            System.out.println();
+            List<String> list = new ArrayList<>();
+            for (byte sub : array) {
+                list.add("(byte) " + String.valueOf(sub));
+            }
+            // quick declaim byte array
+            System.out.print("byte[] array = new byte[]{" + String.join(", ", list) + "};");
+        }
     }
 
     private static int convertHex(char one) {

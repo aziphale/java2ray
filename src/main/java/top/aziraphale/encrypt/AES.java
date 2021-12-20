@@ -11,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AES {
+public final class AES {
 
     public static byte[] CFBEncrypt(byte[] origin, byte[] secretKey) throws Exception {
         SecretKey key = new SecretKeySpec(secretKey, "AES");

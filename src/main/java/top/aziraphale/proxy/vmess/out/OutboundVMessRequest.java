@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
+import top.aziraphale.encrypt.CRC;
 import top.aziraphale.encrypt.FNV;
 import top.aziraphale.exception.FieldSoLongException;
 import top.aziraphale.proxy.common.OutboundRequest;
@@ -66,9 +67,11 @@ public class OutboundVMessRequest extends OutboundRequest {
         return ByteBufAllocator.DEFAULT.ioBuffer();
     }
 
-    private byte[] createAuthId() {
+    private byte[] createAuthId(byte[] key, long time) {
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.heapBuffer();
-        Instant.now().getEpochSecond();
-        return byteBuf.array();
+        byteBuf.writeLong(time);
+        byteBuf.writeInt(RandomUtil.nextInt());
+        byteBuf.writeInt(CRC.checkSumInt(byteBuf.array()));
+        return null;
     }
 }

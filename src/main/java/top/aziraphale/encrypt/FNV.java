@@ -1,12 +1,16 @@
 package top.aziraphale.encrypt;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.math.BigInteger;
 
 /**
  * https://github.com/jakedouglas/fnv-java
  * @date 2021/12/18 2:49 PM
  */
-public class FNV {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class FNV {
     private static final BigInteger INIT32  = new BigInteger("811c9dc5",         16);
     private static final BigInteger INIT64  = new BigInteger("cbf29ce484222325", 16);
     private static final BigInteger PRIME32 = new BigInteger("01000193",         16);
@@ -56,8 +60,5 @@ public class FNV {
         }
 
         return hash;
-    }
-
-    private FNV() {
     }
 }

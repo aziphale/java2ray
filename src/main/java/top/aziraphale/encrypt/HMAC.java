@@ -9,7 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class HMAC {
+public final class HMAC {
 
     private static final String MAC_NAME = "HmacMD5";
 

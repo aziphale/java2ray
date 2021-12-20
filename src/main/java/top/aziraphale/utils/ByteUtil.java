@@ -57,6 +57,20 @@ public class ByteUtil {
     /**
      * combine byte arrays together
      */
+    public static byte[] copy(byte[] ori, int repeat) {
+        if (ori == null || ori.length == 0 || repeat == 0) {
+            return new byte[0];
+        }
+        byte[] array = new byte[ori.length * repeat];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = ori[i % repeat];
+        }
+        return array;
+    }
+
+    /**
+     * combine byte arrays together
+     */
     public static byte[] concat(byte[] prev, byte[] next) {
         int split = (prev == null ? 0 : prev.length);
         int totalLength = split + (next == null ? 0 : next.length);

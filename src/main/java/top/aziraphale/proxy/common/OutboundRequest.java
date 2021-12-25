@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class OutboundRequest extends ChannelInboundHandlerAdapter {
 
-    private final ChannelFuture dstChannelFuture;
+    protected final ChannelFuture dstChannelFuture;
 
     public OutboundRequest(ChannelFuture dstChannelFuture) {
         this.dstChannelFuture = dstChannelFuture;

@@ -16,6 +16,22 @@ public class ByteUtil {
     public static final int BIT_MASK_ALL_ONE = 0xFF;
 
     /**
+     * convert byte arr into ASCII string
+     * @param bytes
+     * @return
+     */
+    public static String toString(byte... bytes) {
+        if (bytes == null || bytes.length == 0) {
+            return "";
+        }
+        char[] chars = new char[bytes.length];
+        for (int index = 0; index < bytes.length; index++) {
+            chars[index] = (char) bytes[index];
+        }
+        return new String(chars);
+    }
+
+    /**
      * convert long into byte arr
      * Big Endian
      * @param num
@@ -85,6 +101,25 @@ public class ByteUtil {
     }
 
     /**
+     * return head bytes in byte array
+     * @param src
+     * @param length
+     * @return
+     */
+    public static byte[] head(byte[] src, int length) {
+        if (src == null) {
+            return new byte[length];
+        }
+        byte[] array = new byte[length];
+        if (src.length <= length) {
+            System.arraycopy(src, 0, array, 0, src.length);
+        } else {
+            System.arraycopy(src, 0, array, 0, array.length);
+        }
+        return array;
+    }
+
+    /**
      * return last bytes in byte array
      * @param src
      * @param length
@@ -125,13 +160,13 @@ public class ByteUtil {
                 }
             }
             System.out.println();
-            System.out.println();
             List<String> list = new ArrayList<>();
             for (byte sub : array) {
                 list.add("(byte) " + String.valueOf(sub));
             }
             // quick declaim byte array
-            System.out.print("byte[] array = new byte[]{" + String.join(", ", list) + "};");
+            System.out.println("byte[] array = new byte[]{" + String.join(", ", list) + "};");
+            System.out.println();
         }
     }
 

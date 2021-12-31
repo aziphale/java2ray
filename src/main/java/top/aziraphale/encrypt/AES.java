@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AES {
 
-    public static byte[] ECBEncrypt(byte[] origin, byte[] secretKey)
+    public static byte[] ECB_ENCRYPT(byte[] origin, byte[] secretKey)
             throws NoSuchPaddingException,
             NoSuchAlgorithmException,
             InvalidKeyException,
@@ -25,7 +25,7 @@ public final class AES {
         return cipher.doFinal(origin);
     }
 
-    public static byte[] ECBDecrypt(byte[] message, byte[] secretKey)
+    public static byte[] ECB_DECRYPT(byte[] message, byte[] secretKey)
             throws NoSuchPaddingException,
             NoSuchAlgorithmException,
             InvalidKeyException,
@@ -37,7 +37,7 @@ public final class AES {
         return cipher.doFinal(message);
     }
 
-    public static byte[] GCMEncrypt(byte[] origin, byte[] secretKey, byte[] nonce, byte[] additionData)
+    public static byte[] GCM_ENCRYPT(byte[] origin, byte[] secretKey, byte[] nonce, byte[] additionData)
             throws NoSuchPaddingException,
             NoSuchAlgorithmException,
             InvalidAlgorithmParameterException,
@@ -52,7 +52,7 @@ public final class AES {
         return cipher.doFinal(origin);
     }
 
-    public static byte[] GCMDecrypt(byte[] message, byte[] secretKey, byte[] nonce, byte[] additionData)
+    public static byte[] GCM_DECRYPT(byte[] message, byte[] secretKey, byte[] nonce, byte[] additionData)
             throws NoSuchPaddingException,
             NoSuchAlgorithmException,
             InvalidAlgorithmParameterException,

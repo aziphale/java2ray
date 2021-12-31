@@ -14,6 +14,7 @@ public class VMessRequest {
 
     public static final byte VMESS_VERSION = 0x01;
 
+    public static final byte OPTION_ALL_OFF = 0x00;
     public static final byte REQUEST_OPTION_CHUNK_STREAM = 0x01;
     public static final byte REQUEST_OPTION_CONNECTION_REUSE = 0x02;
     public static final byte REQUEST_OPTION_CHUNK_MASKING = 0x04;
@@ -24,7 +25,7 @@ public class VMessRequest {
     private byte[] requestBodyIV = new byte[16];
     private byte[] requestBodyKey = new byte[16];
     private byte responseHeader = RandomUtil.nextByte();
-    private byte option;
+    private byte option = REQUEST_OPTION_CHUNK_STREAM;
     /**
      * high 4 bits
      */
@@ -32,7 +33,7 @@ public class VMessRequest {
     /**
      * low 4 bits
      */
-    private VMessSecurityType securityType;
+    private VMessSecurityType securityType = VMessSecurityType.AES_GCM;
     private byte reserve;
     private VMessCommand command;
     private Integer port;
@@ -49,8 +50,8 @@ public class VMessRequest {
 
     {
         RandomUtil.diceByte(requestBodyIV);
-        setRequestBodyIV(SHA.sha256(requestBodyIV));
+        setRequestBodyIV(SHA.SHA_256(requestBodyIV));
         RandomUtil.diceByte(requestBodyKey);
-        setRequestBodyKey(SHA.sha256(requestBodyKey));
+        setRequestBodyKey(SHA.SHA_256(requestBodyKey));
     }
 }

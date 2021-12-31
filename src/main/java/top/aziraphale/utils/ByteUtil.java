@@ -16,6 +16,16 @@ public class ByteUtil {
     public static final int BIT_MASK_ALL_ONE = 0xFF;
 
     /**
+     * returns true if this bitmask contains another bitmask
+     * @param origin
+     * @param target
+     * @return
+     */
+    public static boolean has(byte origin, byte target) {
+        return (origin & target) != 0;
+    }
+
+    /**
      * convert byte arr into ASCII string
      * @param bytes
      * @return

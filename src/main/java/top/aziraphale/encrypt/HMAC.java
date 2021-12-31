@@ -20,7 +20,7 @@ public final class HMAC {
      * @return encrypted byte array
      * @throws Exception
      */
-    public static byte[] HmacMD5Encrypt(String encryptText, String encryptKey) throws Exception {
+    public static byte[] HMAC_MD5_ENCRYPT(String encryptText, String encryptKey) throws Exception {
         byte[] data = encryptKey.getBytes(StandardCharsets.UTF_8);
         SecretKey secretKey = new SecretKeySpec(data, MAC_NAME);
         Mac mac = Mac.getInstance(MAC_NAME);

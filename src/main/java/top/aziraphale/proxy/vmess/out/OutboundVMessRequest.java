@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import top.aziraphale.encrypt.FNV;
+import top.aziraphale.encrypt.SHA;
 import top.aziraphale.exception.FieldSoLongException;
 import top.aziraphale.proxy.common.OutboundRequest;
 import top.aziraphale.proxy.vmess.aead.AEADHeader;
@@ -60,5 +61,15 @@ public class OutboundVMessRequest extends OutboundRequest {
         byte[] salt = new byte[]{(byte) 39, (byte) -124, (byte) -121, (byte) 57, (byte) 126, (byte) 98, (byte) 65, (byte) 56, (byte) -97, (byte) -45, (byte) 9, (byte) -118, (byte) 99, (byte) -106, (byte) 75, (byte) 107, (byte) 99, (byte) 52, (byte) 56, (byte) 54, (byte) 49, (byte) 57, (byte) 102, (byte) 101, (byte) 45, (byte) 56, (byte) 102, (byte) 48, (byte) 50, (byte) 45, (byte) 52, (byte) 57, (byte) 101, (byte) 48, (byte) 45, (byte) 98, (byte) 57, (byte) 101, (byte) 57, (byte) 45, (byte) 101, (byte) 100, (byte) 102, (byte) 55, (byte) 54, (byte) 51, (byte) 101, (byte) 49, (byte) 55, (byte) 101, (byte) 50, (byte) 49};
 
         return AEADHeader.sealVMessAEADHeader(salt, writer.array());
+    }
+
+    private ByteBuf encodeRequestBody(VMessRequest request) {
+        // TODO encrypt request body
+        SHA.SHAKE_128(request.getRequestBodyIV());
+        if (ByteUtil.has(request.getOption(), VMessRequest.REQUEST_OPTION_CHUNK_MASKING)) {
+
+        }
+        // only support AES_GCM encrypt for now
+        return null;
     }
 }

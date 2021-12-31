@@ -30,6 +30,12 @@ public class KDF {
     }
 
     public static byte[] KDF_SPLIT(byte[] key, int length, String... paths) {
+        if (length < 0) {
+            throw new IllegalArgumentException("length : " + length + " (expected: > 0)");
+        }
+        if (length > 32) {
+            throw new IllegalArgumentException("length : " + length + " (expected: <= 32)");
+        }
         return ByteUtil.head(KDF_FULL(key, paths), length);
     }
 }

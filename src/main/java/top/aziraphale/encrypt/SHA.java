@@ -11,24 +11,25 @@ public final class SHA {
 
     /**
      * SHA3-Shake128
-     * @param bytes
+     * @param src
      * @return
      */
-    public static byte[] shake128(byte[] bytes) {
+    public static byte[] SHAKE_128(byte[] src) {
         Digest digest = new SHAKEDigest(128);
-        digest.update(bytes, 0, bytes.length);
-        byte[] date = new byte[digest.getDigestSize()];
-        digest.doFinal(date, 0);
-        return date;
+        byte[] array = new byte[digest.getDigestSize()];
+        digest.update(src, 0, src.length);
+        digest.doFinal(array, 0);
+        return array;
     }
 
     /**
-     * @param origin data
+     * @param src origin data
      * @return the SHA256 checksum of the data
      */
-    public static byte[] sha256(byte[] origin) {
+    public static byte[] SHA_256(byte[] src) {
         SHA256Digest digest = new SHA256Digest();
         byte[] array = new byte[digest.getDigestSize()];
+        digest.update(src, 0, src.length);
         digest.doFinal(array, 0);
         return array;
     }

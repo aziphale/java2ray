@@ -35,12 +35,12 @@ public class AEADHeader {
         RandomUtil.diceByte(nonce);
         byte[] headerLengthKey = KDF.KDF_SPLIT(key, 16, VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_LENGTH_AEAD_KEY, ByteUtil.toString(generatedAuthID), ByteUtil.toString(nonce));
         byte[] headerLengthNonce = KDF.KDF_SPLIT(key, 12, VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_LENGTH_AEAD_IV, ByteUtil.toString(generatedAuthID), ByteUtil.toString(nonce));
-        byte[] headerLengthEncrypted = AES.GCMEncrypt(headerDataLengthBytes, headerLengthKey, headerLengthNonce, generatedAuthID);
+        byte[] headerLengthEncrypted = AES.GCM_ENCRYPT(headerDataLengthBytes, headerLengthKey, headerLengthNonce, generatedAuthID);
 
         // header data aead encryption
         byte[] headerKey = KDF.KDF_SPLIT(key, 16, VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_AEAD_KEY, ByteUtil.toString(generatedAuthID), ByteUtil.toString(nonce));
         byte[] headerNonce = KDF.KDF_SPLIT(key, 12, VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_AEAD_IV, ByteUtil.toString(generatedAuthID), ByteUtil.toString(nonce));
-        byte[] headerEncrypted = AES.GCMEncrypt(data, headerKey, headerNonce, generatedAuthID);
+        byte[] headerEncrypted = AES.GCM_ENCRYPT(data, headerKey, headerNonce, generatedAuthID);
 
         // assemble encrypt data
         byteBuf.clear();
@@ -55,8 +55,8 @@ public class AEADHeader {
     public static byte[] createAuthId(ByteBuf byteBuf, byte[] key, long time) throws Exception {
         byteBuf.writeLong(time);
         byteBuf.writeInt(RandomUtil.nextInt());
-        byteBuf.writeInt(CRC.checkSumInt(byteBuf.array()));
+        byteBuf.writeInt(CRC.CHECK_SUM(byteBuf.array()));
         byte[] encryptKey = KDF.KDF_SPLIT(key, 16, VMess.KDF_SALT_CONST_AUTH_ID_ENCRYPTION_KEY);
-        return AES.ECBEncrypt(byteBuf.array(), encryptKey);
+        return AES.ECB_ENCRYPT(byteBuf.array(), encryptKey);
     }
 }

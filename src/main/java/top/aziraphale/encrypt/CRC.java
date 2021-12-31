@@ -12,7 +12,7 @@ import java.util.zip.CRC32;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CRC {
 
-    public static int checkSumInt(byte[] bytes) {
+    public static int CHECK_SUM(byte[] bytes) {
         CRC32 check = new CRC32();
         check.update(bytes);
         return (int) check.getValue();

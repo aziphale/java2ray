@@ -1,7 +1,5 @@
 package top.aziraphale.proxy.vmess.enums;
 
-
-import lombok.Getter;
 import top.aziraphale.infra.type.TypeCode;
 
 public enum VMessCommand implements TypeCode<Integer> {

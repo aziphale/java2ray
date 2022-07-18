@@ -157,6 +157,7 @@ public class ByteUtil {
         if (array == null || array.length == 0) {
             System.out.println("null");
         } else {
+            StringBuilder builder = new StringBuilder();
             int posLength = Integer.toString(array.length - 1).length();
             for (int i = 0; i < array.length; i++) {
                 byte sub = array[i];
@@ -168,7 +169,11 @@ public class ByteUtil {
                 if ((i + 1) % 8 == 0) {
                     System.out.println();
                 }
+                builder.append(convertHexString((sub >>> 4) & 15));
+                builder.append(convertHexString(sub & 15));
             }
+            System.out.println();
+            System.out.println(builder);
             System.out.println();
             List<String> list = new ArrayList<>();
             for (byte sub : array) {
@@ -176,7 +181,6 @@ public class ByteUtil {
             }
             // quick declaim byte array
             System.out.println("byte[] array = new byte[]{" + String.join(", ", list) + "};");
-            System.out.println();
         }
     }
 
@@ -212,6 +216,29 @@ public class ByteUtil {
                 return 15;
             default:
                 throw new RuntimeException("invalid hex symbol");
+        }
+    }
+
+    private static String convertHexString(int one) {
+        switch (one) {
+            case 0: return "0";
+            case 1: return "1";
+            case 2: return "2";
+            case 3: return "3";
+            case 4: return "4";
+            case 5: return "5";
+            case 6: return "6";
+            case 7: return "7";
+            case 8: return "8";
+            case 9: return "9";
+            case 10: return "A";
+            case 11: return "B";
+            case 12: return "C";
+            case 13: return "D";
+            case 14: return "E";
+            case 15: return "F";
+            default:
+                throw new RuntimeException("invalid hex symbol " + one);
         }
     }
 }

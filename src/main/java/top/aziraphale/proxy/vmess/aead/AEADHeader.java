@@ -33,13 +33,26 @@ public class AEADHeader {
         byte[] headerDataLengthBytes = byteBuf.array();
         byte[] nonce = new byte[8];
         RandomUtil.diceByte(nonce);
-        byte[] headerLengthKey = KDF.KDF_SPLIT(key, 16, VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_LENGTH_AEAD_KEY, ByteUtil.toString(generatedAuthID), ByteUtil.toString(nonce));
-        byte[] headerLengthNonce = KDF.KDF_SPLIT(key, 12, VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_LENGTH_AEAD_IV, ByteUtil.toString(generatedAuthID), ByteUtil.toString(nonce));
-        byte[] headerLengthEncrypted = AES.GCM_ENCRYPT(headerDataLengthBytes, headerLengthKey, headerLengthNonce, generatedAuthID);
+        byte[] headerLengthKey = KDF.KDF_SPLIT(key, 16,
+                VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_LENGTH_AEAD_KEY,
+                ByteUtil.toString(generatedAuthID),
+                ByteUtil.toString(nonce));
+        byte[] headerLengthNonce = KDF.KDF_SPLIT(key, 12,
+                VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_LENGTH_AEAD_IV,
+                ByteUtil.toString(generatedAuthID),
+                ByteUtil.toString(nonce));
+        byte[] headerLengthEncrypted = AES.GCM_ENCRYPT(headerDataLengthBytes, headerLengthKey, headerLengthNonce,
+                generatedAuthID);
 
         // header data aead encryption
-        byte[] headerKey = KDF.KDF_SPLIT(key, 16, VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_AEAD_KEY, ByteUtil.toString(generatedAuthID), ByteUtil.toString(nonce));
-        byte[] headerNonce = KDF.KDF_SPLIT(key, 12, VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_AEAD_IV, ByteUtil.toString(generatedAuthID), ByteUtil.toString(nonce));
+        byte[] headerKey = KDF.KDF_SPLIT(key, 16,
+                VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_AEAD_KEY,
+                ByteUtil.toString(generatedAuthID),
+                ByteUtil.toString(nonce));
+        byte[] headerNonce = KDF.KDF_SPLIT(key, 12,
+                VMess.KDF_SALT_CONST_VMESS_HEADER_PAYLOAD_AEAD_IV,
+                ByteUtil.toString(generatedAuthID),
+                ByteUtil.toString(nonce));
         byte[] headerEncrypted = AES.GCM_ENCRYPT(data, headerKey, headerNonce, generatedAuthID);
 
         // assemble encrypt data
